@@ -26,7 +26,6 @@ Briefly discuss any discrepancies between your results and the published table, 
 ```{r}
 # Automated Package Management
 # Define the list of required packages
-setwd("~/Documents/Workspace/DMI-WorkSpace/assignment-1-dtmk10/")
 packages <- c(
   "readxl", "dplyr", "tidyr", "knitr", "kableExtra", 
   "ggplot2", "corrplot", "purrr", "ggpubr", "rstatix", 
