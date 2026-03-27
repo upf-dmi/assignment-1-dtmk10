@@ -9,8 +9,6 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This practical focuses on data wrangling, exploratory data analysis, visualization, and critical comparison with published results using real biomedical data.
-
 We will work with the publication [**Proteomic and Metabolomic Characterization of COVID-19 Patient Sera**](https://www.sciencedirect.com/science/article/pii/S0092867420306279)
 
 # Exercise 1  
@@ -19,45 +17,37 @@ Download and load Supplementary Table 1 (“Additional Demographical and Baselin
  
 ## Exercise 1.1  
 
-Reproduce Table 1 from the manuscript using the supplementary data. Match the reported summary statistics   as closely as possible.
+Reproduce Table 1 from the manuscript using the supplementary data. Match the reported summary statistics as closely as possible.
 
 Briefly discuss any discrepancies between your results and the published table, and provide possible explanations.
 
 ```{r}
-# Automated Package Management
-# Define the list of required packages
-packages <- c(
-  "readxl", "dplyr", "tidyr", "knitr", "kableExtra", 
-  "ggplot2", "corrplot", "purrr", "ggpubr", "rstatix", 
-  "pheatmap", "grid", "RColorBrewer"
-)
-
-suppressMessages(suppressWarnings(invisible(if (!require("readxl")) {install.packages("readxl"); require(dendextend)})))
-suppressMessages(suppressWarnings(invisible(if (!require("dplyr")) {install.packages("dplyr"); require(dendextend)})))
-suppressMessages(suppressWarnings(invisible(if (!require("tidyr")) {install.packages("tidyr"); require(dendextend)})))
-suppressMessages(suppressWarnings(invisible(if (!require("knitr")) {install.packages("knitr"); require(dendextend)})))
-suppressMessages(suppressWarnings(invisible(if (!require("kableExtra")) {install.packages("kableExtra"); require(dendextend)})))
-suppressMessages(suppressWarnings(invisible(if (!require("ggplot2")) {install.packages("ggplot2"); require(dendextend)})))
-suppressMessages(suppressWarnings(invisible(if (!require("corrplot")) {install.packages("corrplot"); require(dendextend)})))
-suppressMessages(suppressWarnings(invisible(if (!require("purrr")) {install.packages("purrr"); require(dendextend)})))
-suppressMessages(suppressWarnings(invisible(if (!require("ggpubr")) {install.packages("ggpubr"); require(dendextend)})))
-suppressMessages(suppressWarnings(invisible(if (!require("rstatix")) {install.packages("rstatix"); require(dendextend)})))
-suppressMessages(suppressWarnings(invisible(if (!require("pheatmap")) {install.packages("pheatmap"); require(dendextend)})))
-suppressMessages(suppressWarnings(invisible(if (!require("grid")) {install.packages("grid"); require(dendextend)})))
-suppressMessages(suppressWarnings(invisible(if (!require("RColorBrewer")) {install.packages("RColorBrewer"); require(dendextend)})))
+suppressMessages(suppressWarnings(invisible(if (!require("readxl")) {install.packages("readxl")})))
+suppressMessages(suppressWarnings(invisible(if (!require("dplyr")) {install.packages("dplyr")})))
+suppressMessages(suppressWarnings(invisible(if (!require("tidyr")) {install.packages("tidyr")})))
+suppressMessages(suppressWarnings(invisible(if (!require("knitr")) {install.packages("knitr")})))
+suppressMessages(suppressWarnings(invisible(if (!require("kableExtra")) {install.packages("kableExtra")})))
+suppressMessages(suppressWarnings(invisible(if (!require("ggplot2")) {install.packages("ggplot2")})))
+suppressMessages(suppressWarnings(invisible(if (!require("corrplot")) {install.packages("corrplot")})))
+suppressMessages(suppressWarnings(invisible(if (!require("purrr")) {install.packages("purrr")})))
+suppressMessages(suppressWarnings(invisible(if (!require("ggpubr")) {install.packages("ggpubr")})))
+suppressMessages(suppressWarnings(invisible(if (!require("rstatix")) {install.packages("rstatix")})))
+suppressMessages(suppressWarnings(invisible(if (!require("pheatmap")) {install.packages("pheatmap")})))
+suppressMessages(suppressWarnings(invisible(if (!require("grid")) {install.packages("grid")})))
+suppressMessages(suppressWarnings(invisible(if (!require("RColorBrewer")) {install.packages("RColorBrewer")})))
 
 # Libraries preparation
-invisible(library(readxl))
-invisible(library(dplyr))
-invisible(library(tidyr))
-invisible(library(knitr))
-invisible(library(kableExtra))
-invisible(library(ggplot2))
-invisible(library(corrplot))
-invisible(library(purrr))
-invisible(library(ggpubr))
-invisible(library(rstatix))
-invisible(library(pheatmap))
+suppressMessages(invisible(library(readxl)))
+suppressMessages(invisible(library(dplyr)))
+suppressMessages(invisible(library(tidyr)))
+suppressMessages(invisible(library(knitr)))
+suppressMessages(invisible(library(kableExtra)))
+suppressMessages(invisible(library(ggplot2)))
+suppressMessages(invisible(library(corrplot)))
+suppressMessages(invisible(library(purrr)))
+suppressMessages(invisible(library(ggpubr)))
+suppressMessages(invisible(library(rstatix)))
+suppressMessages(invisible(library(pheatmap)))
 ```
 
 ```{r}
@@ -143,68 +133,65 @@ summary_stats <- combined_clinical %>%
   mutate(across(where(is.numeric), ~ round(., 2)))
 
 # Format and Render Table 1
-# Format the strings 
 formatted_table <- summary_stats %>%
-  mutate(
-    # Using sprintf ensures trailing zeros are kept (e.g., 12.50 instead of 12.5)
-    Male = sprintf("%d (%.1f%%)", n_male, per_male),
-    Female = sprintf("%d (%.1f%%)", n_female, per_female),
+  dplyr::mutate(
+    Male = base::sprintf("%d (%.1f%%)", n_male, per_male),
+    Female = base::sprintf("%d (%.1f%%)", n_female, per_female),
     
-    `Age Mean ± SD`  = sprintf("%.2f ± %.2f", `Age (year)_mean`, `Age (year)_sd`),
-    `Age Median(IQR)` = sprintf("%.2f ± %.2f", `Age (year)_median`, `Age (year)_iqr`),
+    `Age Mean ± SD`  = base::sprintf("%.2f ± %.2f", `Age (year)_mean`, `Age (year)_sd`),
+    `Age Median(IQR)` = base::sprintf("%.2f ± %.2f", `Age (year)_median`, `Age (year)_iqr`),
     `Age Range` = `Age (year)_range`,
     
-    `BMI Mean ± SD`  = sprintf("%.2f ± %.2f", `BMI h_mean`, `BMI h_sd`),
-    `BMI Median(IQR)` = sprintf("%.2f ± %.2f", `BMI h_median`, `BMI h_iqr`),
+    `BMI Mean ± SD`  = base::sprintf("%.2f ± %.2f", `BMI h_mean`, `BMI h_sd`),
+    `BMI Median(IQR)` = base::sprintf("%.2f ± %.2f", `BMI h_median`, `BMI h_iqr`),
     `BMI Range` = `BMI h_range`,
     
-    `Onset Mean ± SD`  = sprintf("%.2f ± %.2f", days_onset_to_adm_mean, days_onset_to_adm_sd),
-    `Onset Median(IQR)` = sprintf("%.2f ± %.2f", days_onset_to_adm_median, days_onset_to_adm_iqr),
+    `Onset Mean ± SD`  = base::sprintf("%.2f ± %.2f", days_onset_to_adm_mean, days_onset_to_adm_sd),
+    `Onset Median(IQR)` = base::sprintf("%.2f ± %.2f", days_onset_to_adm_median, days_onset_to_adm_iqr),
     `Onset Range` = days_onset_to_adm_range,
     
-    `Severe Mean ± SD`  = sprintf("%.2f ± %.2f", days_adm_to_severe_mean, days_adm_to_severe_sd),
-    `Severe Median(IQR)` = sprintf("%.2f ± %.2f", days_adm_to_severe_median, days_adm_to_severe_iqr),
+    `Severe Mean ± SD`  = base::sprintf("%.2f ± %.2f", days_adm_to_severe_mean, days_adm_to_severe_sd),
+    `Severe Median(IQR)` = base::sprintf("%.2f ± %.2f", days_adm_to_severe_median, days_adm_to_severe_iqr),
     `Severe Range` = days_adm_to_severe_range
   ) %>%
-  # Select only the Group and the formatted text columns
-  select(Group_Label, N, Male, Female, contains("Mean ± SD"), contains("Median(IQR)"), contains("Range")) %>%
-  # Add the N to the column header string
-  mutate(Group_Label = paste0(Group_Label, " (N = ", N, ")")) %>%
-  select(-N)
+  dplyr::select(
+    Group_Label, N, 
+    Male, Female, 
+    `Age Mean ± SD`, `Age Median(IQR)`, `Age Range`, 
+    `BMI Mean ± SD`, `BMI Median(IQR)`, `BMI Range`, 
+    `Onset Mean ± SD`, `Onset Median(IQR)`, `Onset Range`, 
+    `Severe Mean ± SD`, `Severe Median(IQR)`, `Severe Range`
+  ) %>%
+  dplyr::mutate(Group_Label = base::paste0(Group_Label, " (N = ", N, ")")) %>%
+  dplyr::select(-N)
 
-# Pivot the table so Groups are columns
 final_table <- formatted_table %>%
-  pivot_longer(cols = -Group_Label, names_to = "Metric_Raw", values_to = "Value") %>%
-  pivot_wider(names_from = Group_Label, values_from = Value) %>%
-  # Clean up the metric names to look nice in the table (e.g., "Age Mean ± SD" -> "Mean ± SD")
-  mutate(Variables = gsub("^(Age|BMI|Onset|Severe) ", "", Metric_Raw)) %>%
-  select(Variables, everything(), -Metric_Raw)
+  tidyr::pivot_longer(cols = -Group_Label, names_to = "Metric_Raw", values_to = "Value") %>%
+  tidyr::pivot_wider(names_from = Group_Label, values_from = Value) %>%
+  dplyr::mutate(Variables = base::gsub("^(Age|BMI|Onset|Severe) ", "", Metric_Raw)) %>%
+  dplyr::select(Variables, tidyselect::everything(), -Metric_Raw)
 
-# Clean up irrelevant biological data with "-"
-# (Healthy/Non-Covid don't have COVID onset dates; Non-severe don't have Severe dates)
 final_table <- final_table %>%
-  mutate(
-    # Clean Healthy and Non-COVID columns (columns 2 and 3) for rows 9 to 14
-    across(c(2, 3), ~ ifelse(row_number() >= 9 & row_number() <= 14, "-", .)),
-    # Clean COVID Total and Non-Severe (columns 4 and 5) for rows 12 to 14
-    across(c(4, 5), ~ ifelse(row_number() >= 12 & row_number() <= 14, "-", .))
+  dplyr::mutate(
+    dplyr::across(base::c(2, 3), ~ base::ifelse(dplyr::row_number() >= 9 & dplyr::row_number() <= 14, "-", .)),
+    dplyr::across(base::c(4, 5), ~ base::ifelse(dplyr::row_number() >= 12 & dplyr::row_number() <= 14, "-", .))
   )
 
-# Render with kableExtra
 final_table %>%
-  kbl(booktabs = TRUE, 
+  kableExtra::kbl(booktabs = TRUE, 
       caption = "Tabla 1. Características Clínicas y de Laboratorio de los Pacientes") %>%
-  kable_classic(full_width = FALSE, html_font = "Arial") %>%
-  pack_rows("Sex - no. (%)", 1, 2) %>%
-  pack_rows("Age - year", 3, 5) %>%
-  pack_rows("BMI, kg/m²", 6, 8) %>%
-  pack_rows("Time from Onset to Admission, Days", 9, 11) %>%
-  pack_rows("Time from Admission to Severe, Days", 12, 14) %>%
-  row_spec(0, bold = TRUE) %>% 
-  column_spec(1, bold = TRUE, width = "10cm") %>%
-  kable_styling(latex_options = c("hold_position", "scale_down"))
+  kableExtra::kable_classic(full_width = FALSE, html_font = "Arial") %>%
+  kableExtra::pack_rows("Sex - no. (%)", 1, 2) %>%
+  kableExtra::pack_rows("Age - year", 3, 5) %>%
+  kableExtra::pack_rows("BMI, kg/m²", 6, 8) %>%
+  kableExtra::pack_rows("Time from Onset to Admission, Days", 9, 11) %>%
+  kableExtra::pack_rows("Time from Admission to Severe, Days", 12, 14) %>%
+  kableExtra::row_spec(0, bold = TRUE) %>% 
+  kableExtra::column_spec(1, bold = TRUE, width = "10cm") %>%
+  kableExtra::kable_styling(latex_options = base::c("hold_position", "scale_down"))
 ```
 
+The procedure was able to recreate the vast majority of the table, and the values mostly coincide. However, at th Non-Severe COVID-19 patients group, two individuals assigned as males in the paper were assigned as females in this markdown. Hence, slight differences are appreciated in the descriptive statistics that involve this group. Nevertheless, the following analysis have the same number of individuals in both paper and this work. Therefore, it seems that the problem has been given in the paper analysis, but only in the creation of this table.
 
 ## Exercise 1.2
 Perform an exploratory data analysis (EDA) of the dataset. At a minimum, include:
@@ -309,6 +296,7 @@ final_lab_table %>%
   column_spec(1, bold = FALSE, width = "4cm") %>%
   kable_styling(latex_options = c("hold_position", "scale_down"))
 ```
+
 Study of data distribution
 ```{r}
 # Exploratory Data Analysis of Clinical Parameters
@@ -381,7 +369,6 @@ create_violin_plot <- function(data, param_list, plot_title) {
 }
 
 # Generate Plots
-# Simply calling the object renders it in the RMarkdown output; no need for print()
 p1 <- create_violin_plot(df_plot_covid, vars_part1, "Hematology Parameters")
 p2 <- create_violin_plot(df_plot_covid, vars_part2, "Inflammation & Liver Enzymes")
 p3 <- create_violin_plot(df_plot_covid, vars_part3, "Bilirubin, Kidney & Glucose")
@@ -392,7 +379,8 @@ p3
 
 ```
 
-Studying data distribution
+The violin plots show a huge volume of individuals detected as outliers (by using the 1.5 * IQR). The distribution between groups within the same variables also appear to be very similar. No difference between groups is seen at first sight.
+
 ```{r}
 # Plotting Function for Density Plots
 create_density_plot <- function(data, param_list, plot_title) {
@@ -435,8 +423,9 @@ p_dens3 <- create_density_plot(df_plot_covid, vars_part3, "Density: Bilirubin, K
 p_dens1
 p_dens2
 p_dens3
-
 ```
+
+All distributions seem to be very skewed, even similar to a power-law distribution shape. The only exceptions are the lymphocyte and platelet count for Non-Severe COVID-19 group. Therefore, it is coherent that the Welch-test is used in the paper methodology, since the majority of the distributions are very similar between them (they seem to accomplish homocedasticity) while they do not follow a normal distribution.
 
 Correlation study
 ```{r}
@@ -455,34 +444,35 @@ cor_matrix <- cor(df_corr, use = "pairwise.complete.obs", method = "spearman")
 res_p <- suppressWarnings(cor.mtest(df_corr, conf.level = 0.95, method = "spearman"))
 p_matrix <- res_p$p
 
-# Plotting only significance levels
-# Adjusting 'mar' to ensure labels aren't cut off
+
 par(mar = c(1, 1, 1, 1))
 
 corrplot(cor_matrix, 
-         method = "shade",            # Use colored squares for the background
-         type = "upper",              # Upper triangle only
-         order = "hclust",            # Cluster similar variables
+         method = "shade",         
+         type = "upper",             
+         order = "hclust",           
          
-         # --- SIGNIFICANCE (STARS) CONTROL ---
          p.mat = p_matrix, 
-         insig = "label_sig",         # This puts stars (*, **, ***) in the boxes
-         sig.level = c(0.001, 0.01, 0.05), # Thresholds for ***, **, *
-         pch.cex = 1.5,               # SIZE of the stars (increase to make them pop)
-         pch.col = "black",           # Color of the stars
+         insig = "label_sig",         
+         sig.level = c(0.001, 0.01, 0.05),
+         pch.cex = 1.5,              
+         pch.col = "black",        
          
-         # --- AXIS & LABEL CONTROL ---
-         tl.col = "black",            # Label color
-         tl.srt = 45,                 # Label rotation
-         tl.cex = 1.1,                # SIZE of axis labels
+         tl.col = "black",           
+         tl.srt = 45,            
+         tl.cex = 1.1,           
 
-         # --- NUMBERS CONTROL ---
          addCoef.col = NULL,          
          
-         diag = FALSE,                # Hide self-correlation
-         col = COL2('BrBG', 10)       # Red-Blue diverging palette
+         diag = FALSE,               
+         col = COL2('BrBG', 10)      
 )
 ```
+The correlation study showed a strongly positive correlation within the groups of immune cells and liver-related compounds. This is coherent with the fact that the first are related to the cellular response of the immune system, which is expected in a viral infection (Mehta et al., 2020), while the second are generally excreted by the liver after hepatic damage (e.g., aminotransferases, bilirubin byproducts) or as part of an inflammatory reaction (e.g., acute-phase proteins) (Chirco & Potempa, 2018; Gabay & Kushner, 1999).
+
+The negative correlation between platelets and markers of liver damage is coherent with the fact that, without a healthy liver, thrombopoietin levels are drastically reduced. This hormone is crucial for the production of platelets in the bone marrow; the lower its levels, the lower the quantity of platelets found in the blood (Asakura & Ogawa, 2021).
+
+Regarding lymphocytes, this negative correlation with liver damage biomarkers may reflect that, at the point when the body has reached such deep liver damage, lymphocytes have already migrated into tissues and thus are difficult to find in the peripheral blood (Kulkarni et al., 2020).
 
 # Exercise 2
 ## Exercise 2.1
@@ -579,9 +569,6 @@ plot_list <- purrr::map2(vars_12, titles_12, function(var_name, plot_title) {
     )
 })
 
-# ==========================================
-# PART 3: FINAL COMPOSITION
-# ==========================================
 final_composition <- ggarrange(
   plotlist = plot_list,
   ncol = 3, nrow = 4,
@@ -592,6 +579,7 @@ final_composition <- ggarrange(
 print(final_composition)
 ```
 
+Some differences have been spotted when comparing both paper and this work. All significant differences found in the paper have also been spotted in this work, although in different magnitudes (some p-value > 0.05 in the paper have been found to be p-value > 0.001 in this work, and vice versa). Also, an additional difference has been detected in the WBC between Non-COVID-19  and Non-Severe COVID-19 groups at the WBC variable.
 
 ## Exercise 2.2
 Identify and handle outliers using an appropriate and well-justified method (e.g. removal, transformation, or robust statistics).
@@ -719,6 +707,16 @@ final_composition <- ggarrange(
 print(final_composition)
 ```
 
+When handling outliers, in general, more differences and in a higher magnitude are spotted in some variables (WBC, glucose, CRP and DBIL), while some others disappear (such as in AST count).
+
+Given this results and the study of outliers in the violin plots, it seems that the outlier handling was remarkable to tune and clean the dataset.
+
+Regarding the biological relevance, it seems that there are no remarkable difference between aminotransferases, while there is a decrease in the production of CRP in the case of Non-Severe COVID-19 patients. Also, they happen to have major levels of lymphocytes. This might indicate that maintaining a sufficient amount of white cells, while preserving the liver function, might act as an indicative of a healthy immune response. In this line, Severe patients present higher levels of DBIL, suggesting an increase in liver damage (Kulkarni et al., 2020).
+
+Lastly, the increase in glucose with infection severity might be related with an immune-related metabolic response. This substrate might have been mobilized to serve as a key substrate for the immune cells given the current infection.
+
+The WBC would follow the opposite tendency, representing major cell death levels of this cell types when an infection is occurring.
+
 # Exercise 3
 Create a heatmap of the biomarker data. Include group and gender as annotation variables.
 
@@ -762,7 +760,7 @@ mat <- as.matrix(mat_data)
 rownames(mat) <- df_plot$`Patient ID a`  
 
 # Prepare Annotation DataFrame
-# ---------------------------
+
 annotation_df <- data.frame(
   Group = df_plot$Group_Label_Clean,
   Sex   = df_plot$Sex_Clean
@@ -796,22 +794,17 @@ pheatmap(mat,
          scale = "column",          
          main = "Biomarker Levels by COVID Severity",
          
-         # --- THE "SPACE" & MARGIN FIXES ---
          show_rownames = TRUE,      
          fontsize_row = 3,          
          cellheight = 3,            
          cellwidth = 20,            
          
-         # Increase these to push the heatmap away from the edges
          treeheight_row = 50,       # Pushes heatmap to the right
          treeheight_col = 35,       # Pushes heatmap down
          
-         # This adds specific padding (in points) for the bottom/right/top/left
-         # Usually, adding space to the right (margin 4) helps with row names
-         # pheatmap doesn't have a direct 'mar' argument, so we use this:
+
          clustering_distance_rows = "euclidean", 
          
-         # --- AESTHETICS ---
          border_color = "grey90",      
          cluster_rows = TRUE,
          cluster_cols = TRUE,
@@ -824,9 +817,12 @@ pheatmap(mat,
 )
 ```
 
-# Conclusion
+It was not possible to properly discriminate clean clusters between groups neither sexes. This would suggest that these variables are not good enough to discriminate between the different groups, along either of the factors.
 
-Based on the analysis made and the data shown, there is a significant *divergence* between **healthy** controls, **non-severe COVID-19** patients and  **severe COVID-19** patients. Some of the patterns observed depict different clinical profiles across the different groups: Patients in the *severe* group, have an above average **BMI** and **Age** than other groups with biomarkers that provide evidence on systemic inflammation and organ dysfunction; other features that determine this group is a significantly higher levels of **CRP** and **WBC** counts, alongside a decrease in **Lymphocytes** (severe viral infection). There is also indicators of liver and kidney stress with markers as **ALT**, **AST** and **Creatinine** being more elevated in the severe group, suggesting that the severity of COVID-19 is linked to multiple organs and a hyper-inflammatory response.
+Nevertheless, it is important to consider that some correlation tendencies can also be identified in this plot, finding similar patterns to those seen in the correlation plot.
+
+# Conclusion
+Based on the analysis made and the data shown, there is a significant *divergence* between **healthy** controls, **non-severe COVID-19** patients and  **severe COVID-19** patients. Some of the patterns observed depict different clinical profiles across the different groups: Patients in the *severe* group, have an above average **BMI** and **Age** than other groups with biomarkers that provide evidence on systemic inflammation and organ dysfunction; other features that determine this group is a significantly higher levels of **CRP** and **WBC** counts, alongside a decrease in **Lymphocytes** (severe viral infection). There is also indicators of liver and kidney stress with markers as **ALT**, **AST** and **Creatinine** being more elevated in the severe group, suggesting that the severity of COVID-19 is linked to multiple organs and a more activated inflammatory response.
 
 # session info {.unnumbered}
 
